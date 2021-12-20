@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace User.Models
+namespace LunchGuide.Models
 {
     public class UserModel
     {

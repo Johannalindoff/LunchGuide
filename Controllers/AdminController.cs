@@ -1,14 +1,35 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using LunchGuide.Models;
-using User.Models; // Är detta visual studios egna?
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace LunchGuide.Controllers
 {
     public class AdminController : Controller
     {
+        [HttpGet]
         public ActionResult Login()
         {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AdminOverview(IFormCollection formAnswer)
+        {
+            // Skapa user model objekt från indatat i inloggningsfönstret
+            UserModel um = new UserModel();
+            um.Username = formAnswer["Username"];
+            um.Password = formAnswer["Password"];
+
+            // Borde kontrolleras att detta finns i databasen innan man returnerar den här vyn
+            // Om det inte finns borde login vyn returneras igen med ett errormsg
+
+            // Här skapas sessionsvariabel som heter user som kan hämtas senare
+            string s = JsonConvert.SerializeObject(um);
+            HttpContext.Session.SetString("user", s);
+
+            // Hämta data tillhörande användaren från databasen med hjälp av nån metod och skriv ut
+
             return View();
         }
     }

@@ -1,6 +1,32 @@
-﻿
+﻿@model LunchGuide.Models.UserModel
+
 @{
-    ViewData["Title"] = "login";
+    ViewData["Title"] = "Login";
 }
 
-<h1>hej</h1>
+<h1>Logga in</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AdminOverview" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Username" class="control-label">Användarnamn<abbr title="Det här fältet kräver ett svar" aria-label="required">*</abbr></label>
+                <input asp-for="Username" class="form-control" required maxlength="30"/>
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password" class="control-label">Lösenord<abbr title="Det här fältet kräver ett svar" aria-label="required">*</abbr></label>
+                <input asp-for="Password" class="form-control" required maxlength="30" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input class="btn btn-success" type="submit" value="Logga in" class="btn-default"/>
+            </div>
+        </form>
+    </div>
+</div>
