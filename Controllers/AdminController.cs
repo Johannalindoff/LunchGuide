@@ -29,20 +29,22 @@ namespace LunchGuide.Controllers
             UserMethods ume = new UserMethods();
             i = ume.VerifyUser(um, out error);
 
-            ViewBag.error = error;
-            ViewBag.exists = i;
+            if (i == 1)
+            {
+                // Skapar viewbag
+                ViewBag.name = um.Username;
 
+                // Här skapas sessionsvariabel som heter user som kan hämtas senare
+                string s = JsonConvert.SerializeObject(um);
+                HttpContext.Session.SetString("usersession", s);
 
-            // Här skapas sessionsvariabel som heter user som kan hämtas senare
-            string s = JsonConvert.SerializeObject(um);
-            HttpContext.Session.SetString("usersession", s);
-
-            // Skapar viewbag
-            ViewBag.name = um.Username;
-
-            // Hämta data tillhörande användaren från databasen med hjälp av nån metod och skriv ut
-
-            return View();
+                return View();
+            }
+            else
+            {
+                ViewBag.error = error;
+                return View("Login");
+            }
         }
     }
 }
