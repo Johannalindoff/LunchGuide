@@ -21,24 +21,30 @@ namespace LunchGuide.Controllers
             um.Username = formAnswer["Username"];
             um.Password = formAnswer["Password"];
 
-            // Borde kontrolleras att detta finns i databasen innan man returnerar den här vyn
-            // Om det inte finns borde login vyn returneras igen med ett errormsg
+            // Kontrollera att användaren existerar med hjälp av metoden VerifyUser
             int i = 0;
             string error = "";
-            
             UserMethods ume = new UserMethods();
-            i = ume.VerifyUser(um, out error);
+            UserModel NewUm = new UserModel();
+            NewUm = ume.VerifyUser(um, out error);
 
-            if (i == 1)
+            // Om användaren existerar är den välkommen till vyn AdminOverview
+            if (NewUm != null)
             {
-                // Skapar viewbag
-                ViewBag.name = um.Username;
+                // Skriver ut användarnamnet till vyn
+                ViewBag.name = NewUm.Username;
 
-                // Här skapas sessionsvariabel som heter user som kan hämtas senare
-                string s = JsonConvert.SerializeObject(um);
+                // Skapa en sessionsvariabel som heter user som kan hämtas senare
+                string s = JsonConvert.SerializeObject(NewUm);
                 HttpContext.Session.SetString("usersession", s);
 
-                return View();
+                // Hämta relevant information till användaren
+                RestaurantModel ReMo = new RestaurantModel();
+                RestaurantMethods ReMe = new RestaurantMethods();
+                ReMo = ReMe.GetRestaurantInfo( NewUm.Restaurant, out error);
+
+
+                return View(ReMo);
             }
             else
             {

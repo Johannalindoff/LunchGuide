@@ -1,4 +1,4 @@
-﻿@model LunchGuide.Models.UserModel
+﻿@model LunchGuide.Models.RestaurantModel
 
 @{
     ViewData["Title"] = "AdminOverview";
@@ -7,3 +7,54 @@
 <p>
     Du har loggat in som @ViewBag.name
 </p>
+
+
+<table  class="table table-hover">
+    <thead >
+        <tr>
+            <th> @Html.DisplayNameFor(model => model.Name) </th>
+            <th> @Html.DisplayNameFor(model => model.Address) </th>
+            <th> @Html.DisplayNameFor(model => model.Phone) </th>
+            <th> @Html.DisplayNameFor(model => model.Website) </th>
+            <th> @Html.DisplayNameFor(model => model.OpeningHours) </th>
+            <th> @Html.DisplayNameFor(model => model.Price) </th>
+            <th> @Html.DisplayNameFor(model => model.University) </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td> @Html.DisplayFor(model => model.Name) </td>
+            <td> @Html.DisplayFor(model => model.Address) </td>
+            <td> @Html.DisplayFor(model => model.Phone) </td>
+            <td> @Html.DisplayFor(model => model.Website) </td>
+            <td> @Html.DisplayFor(model => model.OpeningHours) </td>
+            <td> @Html.DisplayFor(model => model.Price) </td>
+            <td> @Html.DisplayFor(model => model.University) </td>
+
+            @*
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Fm_Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Fm_Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Fm_Id })
+            </td>*@
+
+        </tr>
+    </tbody>
+</table>
+
+<hr/>
+<h3>Din lunchmeny</h3>
+
+
+
+
+@*<html>
+<body>
+		
+<form method="POST" action="getdata.php" enctype="multipart/form-data">
+ <input type="file" name="myimage">
+ <input type="submit" name="submit_image" value="Upload">
+</form>
+
+</body>
+</html>*@

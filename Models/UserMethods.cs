@@ -12,7 +12,7 @@ namespace LunchGuide.Models
         {
         }
 
-        public int VerifyUser (UserModel um, out string errormsg)
+        public UserModel VerifyUser (UserModel um, out string errormsg)
         {
             //Skapa SqlConnection
             SqlConnection dbConnection = new SqlConnection();
@@ -21,7 +21,7 @@ namespace LunchGuide.Models
             dbConnection.ConnectionString = @"Data Source =.\sqlexpress; Initial Catalog = test; Integrated Security = True";
 
             //sqlstring och kolla om användaren existerar
-            String sqlstring = "SELECT Us_Id FROM Tbl_User WHERE Us_Username = @username AND Us_Password = @password";
+            String sqlstring = "SELECT * FROM Tbl_User WHERE Us_Username = @username AND Us_Password = @password";
 
             SqlCommand dbCommand = new SqlCommand(sqlstring, dbConnection);
 
@@ -32,32 +32,36 @@ namespace LunchGuide.Models
             SqlDataAdapter myAdapter = new SqlDataAdapter(dbCommand);
             DataSet myDS = new DataSet();
 
-
             try
             {
                 dbConnection.Open();
-
                 myAdapter.Fill(myDS, "UserTable");
-                int exist = 0;
+               
                 int count = 0;
-                
                 count = myDS.Tables["UserTable"].Rows.Count;
+
                 if (count > 0)
                 {
-                    exist = 1;
+                    // En ny modell skapas för att sedan returneras
+                    UserModel NewUm = new UserModel();
+                    NewUm.Id = Convert.ToInt16(myDS.Tables["UserTable"].Rows[0]["Us_Id"]);
+                    NewUm.Username = myDS.Tables["UserTable"].Rows[0]["Us_Username"].ToString();
+                    NewUm.Password = myDS.Tables["UserTable"].Rows[0]["Us_Password"].ToString();
+                    NewUm.Restaurant = Convert.ToInt16(myDS.Tables["UserTable"].Rows[0]["Us_Restaurant"]);
+
                     errormsg = "";
+                    return NewUm;
                 }
                 else
                 {
                     errormsg = "Användarnamn eller lösenord är felaktigt";
+                    return (null);
                 }
-                return (exist);
-
             }
             catch (Exception e)
             {
                 errormsg = e.Message;
-                return 0;
+                return (null);
             }
             finally
             {
