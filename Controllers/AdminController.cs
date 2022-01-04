@@ -61,5 +61,11 @@ namespace LunchGuide.Controllers
                 return View("Login");
             }
         }
+
+        [HttpGet]
+        public ActionResult AddDailyMenu()
+        {
+            return View();
+        }
     }
 }

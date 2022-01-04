@@ -1,6 +1,49 @@
-﻿namespace LunchGuide.Views.Admin
-{
-    public class AddDailyMenu
-    {
-    }
+﻿@model LunchGuide.Models.DishModel
+
+@{
+    ViewData["Title"] = "AddDailyMenu";
 }
+
+<p>
+    Du har loggat in som:
+</p>
+
+
+<h1>Lägg till lunchmeny</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="InsertResult" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Date" class="control-label">Datum</label>
+                <input asp-for="Date" class="form-control"/>
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Dish" class="control-label">Namn på rätt<abbr title="Det här fältet kräver ett svar" aria-label="required">*</abbr></label>
+                <input asp-for="Dish" class="form-control" required maxlength="30" />
+                <span asp-validation-for="Dish" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SpecialDiet" class="control-label">Eventuella allergier<abbr title="Det här fältet kräver ett svar" aria-label="required">*</abbr></label>
+                <input asp-for="SpecialDiet" class="form-control" required maxlength="30" />
+                <span asp-validation-for="SpecialDiet" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input class="btn btn-success" type="submit" value="Lägg till" class="btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Family" asp-action="Family"><type ="button" class="btn btn-danger">Tillbaka</button></a>
+</div>
+
+

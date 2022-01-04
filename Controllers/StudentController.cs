@@ -18,6 +18,10 @@ namespace LunchGuide.Controllers
         [HttpPost]
         public IActionResult Menu()
         {
+            return View();
+        }
+    }
+}
   
 
         
