@@ -18,7 +18,6 @@ namespace LunchGuide.Models
             //Koppling mot Sql server
             dbConnection.ConnectionString = @"Data Source =.\sqlexpress; Initial Catalog = test; Integrated Security = True";
 
-            //sqlstring och kolla om användaren existerar
             String sqlstring = "SELECT * FROM Tbl_Restaurant WHERE Re_Id = @id";
 
             SqlCommand dbCommand = new SqlCommand(sqlstring, dbConnection);
@@ -67,9 +66,6 @@ namespace LunchGuide.Models
             {
                 dbConnection.Close();
             }
-
         }
     }
-
-    
 }

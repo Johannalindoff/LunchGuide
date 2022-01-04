@@ -1,4 +1,4 @@
-﻿@model LunchGuide.Models.RestaurantModel
+﻿@model LunchGuide.Models.AdminOverviewModel
 
 @{
     ViewData["Title"] = "AdminOverview";
@@ -12,49 +12,48 @@
 <table  class="table table-hover">
     <thead >
         <tr>
-            <th> @Html.DisplayNameFor(model => model.Name) </th>
-            <th> @Html.DisplayNameFor(model => model.Address) </th>
-            <th> @Html.DisplayNameFor(model => model.Phone) </th>
-            <th> @Html.DisplayNameFor(model => model.Website) </th>
-            <th> @Html.DisplayNameFor(model => model.OpeningHours) </th>
-            <th> @Html.DisplayNameFor(model => model.Price) </th>
-            <th> @Html.DisplayNameFor(model => model.University) </th>
+            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.Name) </th>
+            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.Address) </th>
+            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.Phone) </th>
+            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.Website) </th>
+            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.OpeningHours) </th>
+            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.Price) </th>
+            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.University) </th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td> @Html.DisplayFor(model => model.Name) </td>
-            <td> @Html.DisplayFor(model => model.Address) </td>
-            <td> @Html.DisplayFor(model => model.Phone) </td>
-            <td> @Html.DisplayFor(model => model.Website) </td>
-            <td> @Html.DisplayFor(model => model.OpeningHours) </td>
-            <td> @Html.DisplayFor(model => model.Price) </td>
-            <td> @Html.DisplayFor(model => model.University) </td>
-
-            @*
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Fm_Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Fm_Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Fm_Id })
-            </td>*@
-
+            <td> @Html.DisplayFor(model => model.RestaurantInfo.Name) </td>
+            <td> @Html.DisplayFor(model => model.RestaurantInfo.Address) </td>
+            <td> @Html.DisplayFor(model => model.RestaurantInfo.Phone) </td>
+            <td> @Html.DisplayFor(model => model.RestaurantInfo.Website) </td>
+            <td> @Html.DisplayFor(model => model.RestaurantInfo.OpeningHours) </td>
+            <td> @Html.DisplayFor(model => model.RestaurantInfo.Price) </td>
+            <td> @Html.DisplayFor(model => model.RestaurantInfo.University) </td>
         </tr>
     </tbody>
 </table>
 
+
+
 <hr/>
 <h3>Din lunchmeny</h3>
 
-
-
-
-@*<html>
-<body>
-		
-<form method="POST" action="getdata.php" enctype="multipart/form-data">
- <input type="file" name="myimage">
- <input type="submit" name="submit_image" value="Upload">
-</form>
-
-</body>
-</html>*@
+<table  class="table table-hover">
+    <thead >
+        <tr>
+            <th> Datum </th>
+            <th> Rätt </th>
+            <th> Anmärkning </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (LunchGuide.Models.DishModel dishInfo in Model.DishInfo) {            
+            <tr>
+            <td> @Html.DisplayFor(model =>  dishInfo.Date) </td>          
+            <td> @Html.DisplayFor(model =>  dishInfo.Dish) </td>
+            <td> @Html.DisplayFor(model =>  dishInfo.SpecialDiet) </td>
+            </tr>
+        }
+    </tbody>
+</table>

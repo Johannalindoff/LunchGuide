@@ -13,6 +13,7 @@ namespace LunchGuide.Controllers
             return View();
         }
 
+
         [HttpPost]
         public IActionResult AdminOverview(IFormCollection formAnswer)
         {
@@ -38,13 +39,21 @@ namespace LunchGuide.Controllers
                 string s = JsonConvert.SerializeObject(NewUm);
                 HttpContext.Session.SetString("usersession", s);
 
-                // Hämta relevant information till användaren
+                // Skapa restaurangmodel
                 RestaurantModel ReMo = new RestaurantModel();
                 RestaurantMethods ReMe = new RestaurantMethods();
                 ReMo = ReMe.GetRestaurantInfo( NewUm.Restaurant, out error);
 
+                // Lägg till restaurangmodellen i vymodelllen
+                AdminOverviewModel myModel = new AdminOverviewModel();
+                myModel.RestaurantInfo = ReMo;
 
-                return View(ReMo);
+                // Lägg till lista av dishinfo i vymodellen
+                DishMethods DiMe = new DishMethods();
+                myModel.DishInfo = DiMe.GetListOfDishes(NewUm.Restaurant, out error);
+
+                // Returnera vymodellen
+                return View(myModel);
             }
             else
             {
