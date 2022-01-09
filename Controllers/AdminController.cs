@@ -65,6 +65,58 @@ namespace LunchGuide.Controllers
         [HttpGet]
         public ActionResult AddDailyMenu()
         {
+            // Hämta sessionsvariabeln
+            UserModel um = new UserModel();
+            string s = HttpContext.Session.GetString("usersession");
+            um = JsonConvert.DeserializeObject<UserModel>(s);
+
+            // Skriver ut användarnamnet till vyn
+            ViewBag.name = um.Username;
+
+            // Skriver ut specialdiets till checkboxarna
+            DishMethods DiMe = new DishMethods();
+            DishModel DiMo = new DishModel();
+            DiMo.AviableSD = DiMe.GetSpecialDietList(out string error2);
+
+            return View(DiMo);
+        }
+
+        [HttpPost]
+        public ActionResult AddDailyMenu(FormCollection formAnswer)
+        {
+            // inparametrar: string Type, DishModel dimo
+            //int i = Convert.ToInt32(Type);
+            //ViewData["Type"] = i;
+
+            string[] checkedItems;
+            List<String> itemString = new List<String>();
+            string items = formAnswer["CategoryIds"];
+
+            if (items != null)
+            {
+                checkedItems = items.Split(new[]
+                {
+                    ","
+                }, StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < checkedItems.Length; i++)
+                {
+                    itemString.Add(checkedItems[i]);
+                }
+            }
+
+            // Skapa en ny dish-modell utifrån formulärsvaren
+            DishModel DiMo = new DishModel();
+            DiMo.Dish = formAnswer["Dish"];
+            DiMo.SpecialDiet = new List<string>();
+            // Kan man skriva såhär till en lista? ELler måste man lägga till objekt för objekt?
+            DiMo.SpecialDiet = itemString;
+            DiMo.Date = Convert.ToDateTime(formAnswer["Date"]);
+
+            // Kalla på dish-metoden som lägger till den nya måltiden i databasen
+            DishMethods DiMe = new DishMethods();
+
+
+
             return View();
         }
     }

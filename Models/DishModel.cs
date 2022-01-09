@@ -10,5 +10,6 @@ namespace LunchGuide.Models
 
         public List<String> SpecialDiet { get; set; }
 
+        public List<SpecialDietModel> AviableSD { get; set; }
     }
 }

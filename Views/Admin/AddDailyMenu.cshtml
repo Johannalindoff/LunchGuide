@@ -5,16 +5,94 @@
 }
 
 <p>
-    Du har loggat in som:
+    Du har loggat in som: @ViewBag.name
 </p>
 
 
 <h1>Lägg till lunchmeny</h1>
 <hr />
 
+
+@*@{
+    int i = 0;
+    if (ViewData["Type"] != null)
+    {
+        i = (int)ViewData["Type"];
+    }
+}*@
+
+@*<link href="https://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/css/bootstrap-multiselect.css" rel="stylesheet" type="text/css" />
+
+@using (Html.BeginForm("AddDailyMenu", "AdminController", FormMethod.Post))
+{
+    @Html.Label("Allergier:")
+    <br />
+    <br />
+    @Html.ListBoxFor(m => m.DishInfo, Model.SpecialDietList, new {@class = "listbox"})
+    <br />
+    <br />
+    <input type="submit" value="Submit">
+}*@
+
+@*<div id="test">
+    @foreach (LunchGuide.Models.SpecialDietModel sd in Model.AviableSD)
+    {
+        <table>
+            <tr>
+                <td>
+                    <input type="checkbox" value="@sd.Id" class="chkclasss" />
+                </td>
+                <td>
+                    @sd.Type
+                </td>
+            </tr>
+        </table>
+    }
+</div>*@
+
+
+
+<p>
+    Antal tillagda måltider: @ViewBag.addedDishes
+</p>
+
+
+
+
+
+@*<div class="row">
+    <div class="form-group col-md-4">
+        <form asp-action="AddDailyMenu">
+            <div class="form-group">
+                <select class="form-control" id="Type" name="Type">
+
+                    @foreach (LunchGuide.Models.SpecialDietModel sd in Model.SpecialDietList)
+                    {
+
+                        @if (sd.Id != i)
+                        {
+                            <option value="@sd.Id"> @sd.Type </option>
+                        }
+                        else
+                        {
+                            <option value="@sd.Id" Selected> @sd.Type </option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Filtrera" class="btn btn-outline-success" />
+            </div>
+        </form>
+    </div>
+</div>*@
+
+
+
+
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="InsertResult" method="post">
+        <form asp-action="AddDailyMenu" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
@@ -29,10 +107,26 @@
                 <span asp-validation-for="Dish" class="text-danger"></span>
             </div>
 
+            @*ska det va en sån här class eller nått id ist?*@
             <div class="form-group">
-                <label asp-for="SpecialDiet" class="control-label">Eventuella allergier<abbr title="Det här fältet kräver ett svar" aria-label="required">*</abbr></label>
-                <input asp-for="SpecialDiet" class="form-control" required maxlength="30" />
-                <span asp-validation-for="SpecialDiet" class="text-danger"></span>
+                @foreach (LunchGuide.Models.SpecialDietModel sd in Model.AviableSD)
+                {
+
+                    <input type="checkbox" id="@sd.Id" name="CategoryIds" value="@sd.Type" class="chkclasss" />
+                    <label for="hej">@sd.Type</label>
+                    < br/>
+
+                    @*<table>
+                        <tr>
+                            <td>
+                                <input type="checkbox" value="@sd.Id" class="chkclasss" />
+                            </td>
+                            <td>
+                                @sd.Type
+                            </td>
+                        </tr>
+                    </table>*@
+                }
             </div>
 
             <div class="form-group">
@@ -40,10 +134,6 @@
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-controller="Family" asp-action="Family"><type ="button" class="btn btn-danger">Tillbaka</button></a>
 </div>
 
 
