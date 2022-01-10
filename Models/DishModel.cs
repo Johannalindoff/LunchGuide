@@ -8,7 +8,11 @@ namespace LunchGuide.Models
         public DateTime Date { get; set; }
         public String Dish { get; set; }
 
-        public List<String> SpecialDiet { get; set; }
+        public List<String> SpecialDietString { get; set; }
+
+        public List<int> SpecialDietInt { get; set; }
+
+        public List<SpecialDietModel> AviableSD { get; set; }
 
     }
 }

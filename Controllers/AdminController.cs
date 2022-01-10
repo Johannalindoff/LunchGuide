@@ -62,10 +62,79 @@ namespace LunchGuide.Controllers
             }
         }
 
+
         [HttpGet]
         public ActionResult AddDailyMenu()
         {
-            return View();
+            // Hämta sessionsvariabeln
+            UserModel um = new UserModel();
+            string s = HttpContext.Session.GetString("usersession");
+            um = JsonConvert.DeserializeObject<UserModel>(s);
+
+            // Skriver ut användarnamnet till vyn
+            ViewBag.name = um.Username;
+
+            // Skriver ut specialdiets till checkboxarna
+            DishMethods DiMe = new DishMethods();
+            DishModel DiMo = new DishModel();
+            DiMo.AviableSD = DiMe.GetSpecialDietList(out string error2);
+
+            return View(DiMo);
+        }
+
+        [HttpPost]
+        public ActionResult AddDailyMenu(IFormCollection formAnswer)
+        {
+
+            // Hämta sessionsvariabeln
+            UserModel um = new UserModel();
+            string s = HttpContext.Session.GetString("usersession");
+            um = JsonConvert.DeserializeObject<UserModel>(s);
+
+            // Skriver ut användarnamnet till vyn
+            ViewBag.name = um.Username;
+
+            // Skriver ut specialdiets till checkboxarna
+            DishMethods DiMe = new DishMethods();
+            DishModel DiMo = new DishModel();
+            DiMo.AviableSD = DiMe.GetSpecialDietList(out string error2);
+
+            // Samlar ihop enkätsvar
+            string items = formAnswer["CategoryIds"];
+            string[] checkedItemsString;
+            List<int> checkedItemsInt = new List<int>();
+
+            // De ibockade rutorna kommer som en sträng, dela upp den om omvandla till ints
+            if (items != null)
+            {
+                checkedItemsString = items.Split(new[]
+                {
+                    ","
+                }, StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < checkedItemsString.Length; i++)
+                {
+                    checkedItemsInt.Add(Convert.ToInt16(checkedItemsString[i]));
+                }
+            }
+
+            // Skapa en ny dish-modell utifrån formulärsvaren
+            DishModel DiMo2 = new DishModel();
+            DiMo2.Dish = formAnswer["Dish"];
+            DiMo2.Date = Convert.ToDateTime(formAnswer["Date"]);
+            DiMo2.SpecialDietInt = new List<int>();
+            DiMo2.SpecialDietInt = checkedItemsInt;
+
+            // Kalla på dish-metoden som lägger till den nya måltiden i databasen
+            DishMethods DiMe2 = new DishMethods();
+            int addSucceeded = 0;
+            addSucceeded = DiMe2.addDish(um, DiMo2, out string error);
+
+            // Skriv ut till vyn om det lyckades eller inte
+            ViewBag.antal = addSucceeded;
+            ViewBag.error = error;
+            ViewBag.dish = DiMo2.Dish;
+
+            return View(DiMo);
         }
     }
 }

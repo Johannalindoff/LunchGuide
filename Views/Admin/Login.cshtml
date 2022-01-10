@@ -3,12 +3,11 @@
 @{
     ViewData["Title"] = "Login";
 }
+<br />
 
 <h1>Logga in</h1>
-<p>
-    Eventuellt felmeddelande: @ViewBag.error
-</p>
-<hr />
+
+<br />
 
 <div class="row">
     <div class="col-md-4">
@@ -26,6 +25,11 @@
                 <input asp-for="Password" class="form-control" required maxlength="30" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
+
+            @if (@ViewBag.error != "")
+            {
+                <p style="color:red;">@ViewBag.error </p>
+            }
 
             <div class="form-group">
                 <input class="btn btn-success" type="submit" value="Logga in" class="btn-default"/>

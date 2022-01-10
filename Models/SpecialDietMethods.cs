@@ -10,7 +10,7 @@ namespace LunchGuide.Models
     {
         public SpecialDietMethods() { }
 
-        public List<SpecialDietModel> GetSpecialDietList(int restaurantId, out string errormsg)
+        public List<SpecialDietModel> GetSpecialDietList(out string errormsg)
         {
             //Skapa SqlConnection
             SqlConnection dbConnection = new SqlConnection();

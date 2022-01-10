@@ -5,16 +5,14 @@
 }
 
 <p>
-    Du har loggat in som:
+    Du har loggat in som: @ViewBag.name
 </p>
 
-
-<h1>Lägg till lunchmeny</h1>
-<hr />
+<h3>Lägg till en måltid</h3>
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="InsertResult" method="post">
+        <form asp-action="AddDailyMenu" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
@@ -23,17 +21,26 @@
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
 
+            <br/>
+
             <div class="form-group">
                 <label asp-for="Dish" class="control-label">Namn på rätt<abbr title="Det här fältet kräver ett svar" aria-label="required">*</abbr></label>
                 <input asp-for="Dish" class="form-control" required maxlength="30" />
                 <span asp-validation-for="Dish" class="text-danger"></span>
             </div>
 
+            <br/>
+
             <div class="form-group">
-                <label asp-for="SpecialDiet" class="control-label">Eventuella allergier<abbr title="Det här fältet kräver ett svar" aria-label="required">*</abbr></label>
-                <input asp-for="SpecialDiet" class="form-control" required maxlength="30" />
-                <span asp-validation-for="SpecialDiet" class="text-danger"></span>
+                @foreach (LunchGuide.Models.SpecialDietModel sd in Model.AviableSD)
+                {
+                    <input type="checkbox" id="@sd.Id" name="CategoryIds" value="@sd.Id" class="chkclasss" />
+                    <label for="hej">@sd.Type</label>
+                    <br/>
+                }
             </div>
+
+            <br/>
 
             <div class="form-group">
                 <input class="btn btn-success" type="submit" value="Lägg till" class="btn-default" />
@@ -42,8 +49,17 @@
     </div>
 </div>
 
+@if (@ViewBag.antal == 1)
+{
+    <p> @ViewBag.dish har lagts till </p>
+}
+else if(@ViewBag.antal == 0)
+{
+   <p>@ViewBag.error</p> 
+}
+
+<br/>
+
 <div>
-    <a asp-controller="Family" asp-action="Family"><type ="button" class="btn btn-danger">Tillbaka</button></a>
+    <a asp-controller="Admin" asp-action="AdminOverview">Tillbaka till restaurangöverblick</a>
 </div>
-
-
