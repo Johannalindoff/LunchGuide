@@ -8,87 +8,9 @@
     Du har loggat in som: @ViewBag.name
 </p>
 
+<h3>Lägg till en måltid</h3>
 
-<h1>Lägg till lunchmeny</h1>
-<hr />
-
-
-@*@{
-    int i = 0;
-    if (ViewData["Type"] != null)
-    {
-        i = (int)ViewData["Type"];
-    }
-}*@
-
-@*<link href="https://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/css/bootstrap-multiselect.css" rel="stylesheet" type="text/css" />
-
-@using (Html.BeginForm("AddDailyMenu", "AdminController", FormMethod.Post))
-{
-    @Html.Label("Allergier:")
-    <br />
-    <br />
-    @Html.ListBoxFor(m => m.DishInfo, Model.SpecialDietList, new {@class = "listbox"})
-    <br />
-    <br />
-    <input type="submit" value="Submit">
-}*@
-
-@*<div id="test">
-    @foreach (LunchGuide.Models.SpecialDietModel sd in Model.AviableSD)
-    {
-        <table>
-            <tr>
-                <td>
-                    <input type="checkbox" value="@sd.Id" class="chkclasss" />
-                </td>
-                <td>
-                    @sd.Type
-                </td>
-            </tr>
-        </table>
-    }
-</div>*@
-
-
-
-<p>
-    Antal tillagda måltider: @ViewBag.addedDishes
-</p>
-
-
-
-
-
-@*<div class="row">
-    <div class="form-group col-md-4">
-        <form asp-action="AddDailyMenu">
-            <div class="form-group">
-                <select class="form-control" id="Type" name="Type">
-
-                    @foreach (LunchGuide.Models.SpecialDietModel sd in Model.SpecialDietList)
-                    {
-
-                        @if (sd.Id != i)
-                        {
-                            <option value="@sd.Id"> @sd.Type </option>
-                        }
-                        else
-                        {
-                            <option value="@sd.Id" Selected> @sd.Type </option>
-                        }
-                    }
-                </select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Filtrera" class="btn btn-outline-success" />
-            </div>
-        </form>
-    </div>
-</div>*@
-
-
-
+<br/>
 
 <div class="row">
     <div class="col-md-4">
@@ -101,33 +23,26 @@
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
 
+            <br/>
+
             <div class="form-group">
                 <label asp-for="Dish" class="control-label">Namn på rätt<abbr title="Det här fältet kräver ett svar" aria-label="required">*</abbr></label>
                 <input asp-for="Dish" class="form-control" required maxlength="30" />
                 <span asp-validation-for="Dish" class="text-danger"></span>
             </div>
 
-            @*ska det va en sån här class eller nått id ist?*@
+            <br/>
+
             <div class="form-group">
                 @foreach (LunchGuide.Models.SpecialDietModel sd in Model.AviableSD)
                 {
-
-                    <input type="checkbox" id="@sd.Id" name="CategoryIds" value="@sd.Type" class="chkclasss" />
+                    <input type="checkbox" id="@sd.Id" name="CategoryIds" value="@sd.Id" class="chkclasss" />
                     <label for="hej">@sd.Type</label>
-                    < br/>
-
-                    @*<table>
-                        <tr>
-                            <td>
-                                <input type="checkbox" value="@sd.Id" class="chkclasss" />
-                            </td>
-                            <td>
-                                @sd.Type
-                            </td>
-                        </tr>
-                    </table>*@
+                    <br/>
                 }
             </div>
+
+            <br/>
 
             <div class="form-group">
                 <input class="btn btn-success" type="submit" value="Lägg till" class="btn-default" />
@@ -136,4 +51,17 @@
     </div>
 </div>
 
+@if (@ViewBag.antal == 1)
+{
+    <p> @ViewBag.dish har lagts till </p>
+}
+else if(@ViewBag.antal == 0)
+{
+   <p>@ViewBag.error</p> 
+}
 
+<br/>
+
+<div>
+    <a asp-controller="Admin" asp-action="AdminOverview">Tillbaka till restaurangöverblick</a>
+</div>

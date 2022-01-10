@@ -38,12 +38,12 @@ namespace LunchGuide.Models
 
                 if (count > 0)
                 {
-                    while(i < count)
+                    while (i < count)
                     {
                         SpecialDietModel sdMo = new SpecialDietModel();
                         sdMo.Id = Convert.ToInt16(myDS.Tables["SpecialDietTable"].Rows[i]["SD_Id"]);
                         sdMo.Type = myDS.Tables["SpecialDietTable"].Rows[i]["SD_Type"].ToString();
-                        
+
                         sdList.Add(sdMo);
                         i++;
                     }

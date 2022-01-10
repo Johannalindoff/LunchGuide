@@ -5,7 +5,7 @@
 }
 
 <p>
-    Du har loggat in som: @ViewBag.name
+    Du har loggat in som @ViewBag.name
 </p>
 
 
@@ -34,10 +34,16 @@
     </tbody>
 </table>
 
+<br/>
+<br/>
 
-
-<hr/>
 <h3>Din lunchmeny</h3>
+
+<br/>
+
+<div>
+    <a asp-controller="Admin" asp-action="AddDailyMenu">Lägg till rätter</a>
+</div>
 
 <table  class="table table-hover">
     <thead >
@@ -48,16 +54,12 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (LunchGuide.Models.DishModel dishInfo in Model.DishInfo) {            
+        @foreach (LunchGuide.Models.DishModel dishInfo in Model.DishInfo) { 
             <tr>
-            <td> @Html.DisplayFor(model =>  dishInfo.Date) </td>          
-            <td> @Html.DisplayFor(model =>  dishInfo.Dish) </td>
-            <td> @Html.DisplayFor(model =>  dishInfo.SpecialDiet) </td>
+                <td> @Html.DisplayFor(model =>  dishInfo.Date) </td>          
+                <td> @Html.DisplayFor(model =>  dishInfo.Dish) </td>
+                <td> @Html.DisplayFor(model =>  dishInfo.SpecialDietString) </td>
             </tr>
         }
     </tbody>
 </table>
-
-<div>
-    <a asp-controller="Admin" asp-action="AddDailyMenu">Lägg till rätter</a>
-</div>

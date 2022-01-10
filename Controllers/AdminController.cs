@@ -42,7 +42,7 @@ namespace LunchGuide.Controllers
                 // Skapa restaurangmodel
                 RestaurantModel ReMo = new RestaurantModel();
                 RestaurantMethods ReMe = new RestaurantMethods();
-                ReMo = ReMe.GetRestaurantInfo( NewUm.Restaurant, out error);
+                ReMo = ReMe.GetRestaurantInfo(NewUm.Restaurant, out error);
 
                 // Lägg till restaurangmodellen i vymodelllen
                 AdminOverviewModel myModel = new AdminOverviewModel();
@@ -61,6 +61,48 @@ namespace LunchGuide.Controllers
                 return View("Login");
             }
         }
+
+
+        [HttpGet]
+        public IActionResult AdminOverview()
+        {
+
+            // Hämta sessionsvariabeln
+            UserModel um = new UserModel();
+            string s = HttpContext.Session.GetString("usersession");
+            um = JsonConvert.DeserializeObject<UserModel>(s);
+
+            string error = "";
+
+            // Om användaren existerar är den välkommen till vyn AdminOverview
+            if (um != null)
+            {
+                // Skriver ut användarnamnet till vyn
+                ViewBag.name = um.Username;
+
+                // Skapa restaurangmodel
+                RestaurantModel ReMo = new RestaurantModel();
+                RestaurantMethods ReMe = new RestaurantMethods();
+                ReMo = ReMe.GetRestaurantInfo(um.Restaurant, out error);
+
+                // Lägg till restaurangmodellen i vymodelllen
+                AdminOverviewModel myModel = new AdminOverviewModel();
+                myModel.RestaurantInfo = ReMo;
+
+                // Lägg till lista av dishinfo i vymodellen
+                DishMethods DiMe = new DishMethods();
+                myModel.DishInfo = DiMe.GetListOfDishes(um.Restaurant, out error);
+
+                // Returnera vymodellen
+                return View(myModel);
+            }
+            else
+            {
+                ViewBag.error = error;
+                return View("Login");
+            }
+        }
+
 
         [HttpGet]
         public ActionResult AddDailyMenu()
@@ -82,42 +124,58 @@ namespace LunchGuide.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddDailyMenu(FormCollection formAnswer)
+        public ActionResult AddDailyMenu(IFormCollection formAnswer)
         {
-            // inparametrar: string Type, DishModel dimo
-            //int i = Convert.ToInt32(Type);
-            //ViewData["Type"] = i;
 
-            string[] checkedItems;
-            List<String> itemString = new List<String>();
+            // Hämta sessionsvariabeln
+            UserModel um = new UserModel();
+            string s = HttpContext.Session.GetString("usersession");
+            um = JsonConvert.DeserializeObject<UserModel>(s);
+
+            // Skriver ut användarnamnet till vyn
+            ViewBag.name = um.Username;
+
+            // Skriver ut specialdiets till checkboxarna
+            DishMethods DiMe = new DishMethods();
+            DishModel DiMo = new DishModel();
+            DiMo.AviableSD = DiMe.GetSpecialDietList(out string error2);
+
+            // Samlar ihop enkätsvar
             string items = formAnswer["CategoryIds"];
+            string[] checkedItemsString;
+            List<int> checkedItemsInt = new List<int>();
 
+            // De ibockade rutorna kommer som en sträng, dela upp den om omvandla till ints
             if (items != null)
             {
-                checkedItems = items.Split(new[]
+                checkedItemsString = items.Split(new[]
                 {
                     ","
                 }, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < checkedItems.Length; i++)
+                for (int i = 0; i < checkedItemsString.Length; i++)
                 {
-                    itemString.Add(checkedItems[i]);
+                    checkedItemsInt.Add(Convert.ToInt16(checkedItemsString[i]));
                 }
             }
 
             // Skapa en ny dish-modell utifrån formulärsvaren
-            DishModel DiMo = new DishModel();
-            DiMo.Dish = formAnswer["Dish"];
-            DiMo.SpecialDiet = new List<string>();
-            // Kan man skriva såhär till en lista? ELler måste man lägga till objekt för objekt?
-            DiMo.SpecialDiet = itemString;
-            DiMo.Date = Convert.ToDateTime(formAnswer["Date"]);
+            DishModel DiMo2 = new DishModel();
+            DiMo2.Dish = formAnswer["Dish"];
+            DiMo2.Date = Convert.ToDateTime(formAnswer["Date"]);
+            DiMo2.SpecialDietInt = new List<int>();
+            DiMo2.SpecialDietInt = checkedItemsInt;
 
             // Kalla på dish-metoden som lägger till den nya måltiden i databasen
-            DishMethods DiMe = new DishMethods();
+            DishMethods DiMe2 = new DishMethods();
+            int addSucceeded = 0;
+            addSucceeded = DiMe2.addDish(um, DiMo2, out string error);
 
+            // Skriv ut till vyn om det lyckades eller inte
+            ViewBag.antal = addSucceeded;
+            ViewBag.error = error;
+            ViewBag.dish = DiMo2.Dish;
 
-
-            return View();
+            return View(DiMo);
         }
     }
 }
