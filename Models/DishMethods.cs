@@ -19,7 +19,7 @@ namespace LunchGuide.Models
             dbConnection.ConnectionString = @"Data Source =.\sqlexpress; Initial Catalog = test; Integrated Security = True";
 
             //sqlstring, hämta information om lunchmeny tillhörande relevant restaurang
-            String sqlstring = "SELECT dm.DM_Restaurant, dm.DM_Date, d.Di_Id, d.Di_Name, sd.SD_Type FROM Tbl_DailyMenu as dm INNER JOIN Tbl_DailyMenuHasDish as dmhd ON dm.DM_Id = dmhd.DMHD_DM_Id INNER JOIN Tbl_Dish as d ON dmhd.DMHD_Di_Id = d.Di_Id INNER JOIN Tbl_DishHasSpecialDiet as hsd ON d.Di_Id = hsd.HSD_Di_Id INNER JOIN Tbl_SpecialDiet sd ON sd.SD_Id = hsd.HSD_SD_Id WHERE dm.DM_Restaurant = @id ORDER BY d.Di_Id ASC";
+            String sqlstring = "SELECT dm.DM_Restaurant, dm.DM_Date, d.Di_Id, d.Di_Name, sd.SD_Type FROM Tbl_DailyMenu as dm INNER JOIN Tbl_DailyMenuHasDish as dmhd ON dm.DM_Id = dmhd.DMHD_DM_Id INNER JOIN Tbl_Dish as d ON dmhd.DMHD_Di_Id = d.Di_Id INNER JOIN Tbl_DishHasSpecialDiet as hsd ON d.Di_Id = hsd.HSD_Di_Id INNER JOIN Tbl_SpecialDiet sd ON sd.SD_Id = hsd.HSD_SD_Id WHERE dm.DM_Restaurant = @id ORDER BY dm.DM_Date DESC";
 
             SqlCommand dbCommand = new SqlCommand(sqlstring, dbConnection);
 

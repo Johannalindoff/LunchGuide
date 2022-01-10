@@ -64,6 +64,47 @@ namespace LunchGuide.Controllers
 
 
         [HttpGet]
+        public IActionResult AdminOverview()
+        {
+
+            // Hämta sessionsvariabeln
+            UserModel um = new UserModel();
+            string s = HttpContext.Session.GetString("usersession");
+            um = JsonConvert.DeserializeObject<UserModel>(s);
+
+            string error = "";
+
+            // Om användaren existerar är den välkommen till vyn AdminOverview
+            if (um != null)
+            {
+                // Skriver ut användarnamnet till vyn
+                ViewBag.name = um.Username;
+
+                // Skapa restaurangmodel
+                RestaurantModel ReMo = new RestaurantModel();
+                RestaurantMethods ReMe = new RestaurantMethods();
+                ReMo = ReMe.GetRestaurantInfo(um.Restaurant, out error);
+
+                // Lägg till restaurangmodellen i vymodelllen
+                AdminOverviewModel myModel = new AdminOverviewModel();
+                myModel.RestaurantInfo = ReMo;
+
+                // Lägg till lista av dishinfo i vymodellen
+                DishMethods DiMe = new DishMethods();
+                myModel.DishInfo = DiMe.GetListOfDishes(um.Restaurant, out error);
+
+                // Returnera vymodellen
+                return View(myModel);
+            }
+            else
+            {
+                ViewBag.error = error;
+                return View("Login");
+            }
+        }
+
+
+        [HttpGet]
         public ActionResult AddDailyMenu()
         {
             // Hämta sessionsvariabeln
