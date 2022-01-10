@@ -4,8 +4,8 @@ namespace LunchGuide.Models
 {
     public class UniversityModel
     {
-        // Id:et hämtas aldrig!
-        public int Id { get; set; }
+        
+        public int Uni_Id { get; set; }
 
         
         public string Uni_Name { get; set; }
