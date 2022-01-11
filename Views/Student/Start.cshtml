@@ -1,0 +1,25 @@
+﻿@model IEnumerable<LunchGuide.Models.UniversityModel>
+
+@{
+    ViewData["Title"] = "Start";
+}
+
+<h1>Välj ett universitet</h1>
+<p>
+    Eventuellt felmeddelande: @ViewBag.error
+</p>
+<hr />
+
+
+
+@foreach (var item in Model)
+{
+
+
+
+
+    <br />
+    @Html.ActionLink(item.Uni_Name, "Menu", new { universityId = item.Uni_Id })
+
+    <br />
+}
