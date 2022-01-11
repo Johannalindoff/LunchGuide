@@ -1,0 +1,39 @@
+﻿@model LunchGuide.Models.AllMenuViewModel
+
+@{
+    ViewData["Title"] = "Menu";
+}
+
+<h1>Dagens lunch</h1>
+
+
+
+
+<table class="table table-hover">
+    @foreach (LunchGuide.Models.ViewMenuModel variabelnamn in Model.listOfMenus)
+    {
+        <thead>
+            <tr>
+                <th>  @Html.ActionLink(variabelnamn.Restaurant.Name, "RestaurantInfo", new { restaurantId = variabelnamn.Restaurant.Id })</th>
+                <th> @Html.DisplayFor(model => variabelnamn.Restaurant.Price)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < variabelnamn.DishList.Count; i++)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(model => variabelnamn.DishList[i].Dish)</td>
+                    <td>@Html.DisplayFor(model => variabelnamn.DishList[i].SpecialDiet)</td>
+                </tr>
+            }
+
+
+
+        </tbody>
+
+    }
+</table>
+
+
+
+
