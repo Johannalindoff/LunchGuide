@@ -99,6 +99,231 @@ namespace LunchGuide.Models
         }
 
 
+        public DishModel GetDish(int DishId, out string errormsg)
+        {
+            //Skapa SqlConnection
+            SqlConnection dbConnection = new SqlConnection();
+
+            //Koppling mot Sql server
+            dbConnection.ConnectionString = @"Data Source =.\sqlexpress; Initial Catalog = test; Integrated Security = True";
+
+            //sqlstring, hämta information om lunchmeny tillhörande relevant restaurang
+            String sqlstring = "SELECT dm.DM_Date, d.Di_Id, d.Di_Name, sd.SD_Type, sd.SD_Id FROM Tbl_DailyMenu as dm INNER JOIN Tbl_DailyMenuHasDish as dmhd ON dm.DM_Id = dmhd.DMHD_DM_Id INNER JOIN Tbl_Dish as d ON dmhd.DMHD_Di_Id = d.Di_Id INNER JOIN Tbl_DishHasSpecialDiet as hsd ON d.Di_Id = hsd.HSD_Di_Id INNER JOIN Tbl_SpecialDiet sd ON sd.SD_Id = hsd.HSD_SD_Id WHERE d.Di_Id=@id";
+
+            SqlCommand dbCommand = new SqlCommand(sqlstring, dbConnection);
+
+            dbCommand.Parameters.Add("id", SqlDbType.NVarChar, 30).Value = DishId;
+
+            //Skapa en adapter
+            SqlDataAdapter myAdapter = new SqlDataAdapter(dbCommand);
+            DataSet myDS = new DataSet();
+            List<DishModel> DishList = new List<DishModel>();
+            DishModel DiMo = new DishModel();
+
+            try
+            {
+                dbConnection.Open();
+                myAdapter.Fill(myDS, "DishTable");
+
+                int i = 0;
+                int count = 0;
+                count = myDS.Tables["DishTable"].Rows.Count;
+
+                if (count > 0)
+                {
+                    // Gå igenom alla rader som ska läggas till
+                    while (i < count)
+                    {
+                        // Skapa en Dishmodel och lägg till det nuvarande id:et
+                        DishModel dm = new DishModel();
+                        dm.Id = Convert.ToInt16(myDS.Tables["DishTable"].Rows[i]["Di_Id"]);
+                        dm.Date = Convert.ToDateTime(myDS.Tables["DishTable"].Rows[i]["DM_Date"]);
+
+
+                        // Kolla om Dishlistan redan innehåller det nuvarande id:et
+                        if (DishList.Any(d => d.Id == dm.Id))
+                        {
+                            // Kolla vart i Dishlistan det id:et finns
+                            int listIndex = DishList.FindIndex(d => d.Id == dm.Id);
+
+                            if (DishList[listIndex].Date == dm.Date)
+                            {
+                                // Om id:et har en lista som inte innehåller nuvarande allergi, lägg till det
+                                if (!(DishList[listIndex].SpecialDietString.Contains(myDS.Tables["DishTable"].Rows[i]["SD_Type"].ToString())))
+                                {
+                                    DishList[listIndex].SpecialDietString.Add(myDS.Tables["DishTable"].Rows[i]["SD_Type"].ToString() + " ");
+                                    DishList[listIndex].SpecialDietInt.Add(Convert.ToInt16(myDS.Tables["DishTable"].Rows[i]["SD_Id"]));
+                                }
+                            }
+                        }
+                        // Om Dishlistan inte innehåller det nuvarande id:et, lägg till maträtten
+                        else
+                        {
+                            dm.Dish = myDS.Tables["DishTable"].Rows[i]["Di_Name"].ToString();
+                            dm.SpecialDietString = new List<String>();
+                            dm.SpecialDietString.Add(myDS.Tables["DishTable"].Rows[i]["SD_Type"].ToString() + " ");
+                            dm.SpecialDietInt = new List<int>();
+                            dm.SpecialDietInt.Add(Convert.ToInt16(myDS.Tables["DishTable"].Rows[i]["SD_Id"]));
+
+                            DishList.Add(dm);
+                        }
+
+                        // Kolla nästa rad
+                        i++;
+                    }
+                    errormsg = "";
+                    DiMo = DishList[0];
+                    return DiMo;
+                }
+                else
+                {
+                    errormsg = "Det går inte att hämta information om rätten";
+                    return (null);
+                }
+            }
+            catch (Exception e)
+            {
+                errormsg = e.Message;
+                return null;
+            }
+            finally
+            {
+                dbConnection.Close();
+            }
+        }
+
+
+        public int DeleteDish(DishModel DiMo, out string errormsg)
+        {
+            //Skapa SqlConnection
+            SqlConnection dbConnection = new SqlConnection();
+
+            //Koppling mot Sql server
+            dbConnection.ConnectionString = @"Data Source =.\sqlexpress; Initial Catalog = test; Integrated Security = True";
+
+            //sqlstring, hämta information om lunchmeny tillhörande relevant restaurang
+            String sqlstring = "DELETE FROM [Tbl_DailyMenuHasDish] WHERE DMHD_Di_id = @id DELETE FROM [Tbl_DishHasSpecialDiet] WHERE HSD_Di_id = @id DELETE FROM [Tbl_Dish] WHERE Di_id = @id";
+
+            SqlCommand dbCommand = new SqlCommand(sqlstring, dbConnection);
+
+            dbCommand.Parameters.Add("id", SqlDbType.NVarChar, 30).Value = DiMo.Id;
+
+            try
+            {
+                dbConnection.Open();
+                int i = dbCommand.ExecuteNonQuery();
+                if (i == 0)
+                {
+                    errormsg = "Det gick inte att radera måltiden";
+                }
+                else
+                {
+                    errormsg = "";
+                }
+                
+                return (i);
+            }
+            catch (Exception e)
+            {
+                errormsg = e.Message;
+                return 0;
+            }
+            finally
+            {
+                dbConnection.Close();
+            }
+        }
+
+
+        public int EditDish(DishModel DiMo, out string errormsg)
+        {
+            //Skapa SqlConnection
+            SqlConnection dbConnection = new SqlConnection();
+
+            //Koppling mot Sql server
+            dbConnection.ConnectionString = @"Data Source =.\sqlexpress; Initial Catalog = test; Integrated Security = True";
+
+            String sqlstring = "UPDATE [Tbl_Dish] SET [Di_Name] = @dishname WHERE [Di_Id] = @id UPDATE [Tbl_DailyMenu] SET [DM_Date] = @date WHERE [DM_Id] = (SELECT DMHD_DM_Id FROM [Tbl_DailyMenuHasDish] WHERE DMHD_Di_Id = @id) DELETE FROM [Tbl_DishHasSpecialDiet] WHERE HSD_Di_id = @id";
+
+            SqlCommand dbCommand = new SqlCommand(sqlstring, dbConnection);
+
+            dbCommand.Parameters.Add("id", SqlDbType.NVarChar, 30).Value = DiMo.Id;
+            dbCommand.Parameters.Add("date", SqlDbType.DateTime).Value = DiMo.Date;
+            dbCommand.Parameters.Add("dishname", SqlDbType.NVarChar, 30).Value = DiMo.Dish;
+
+            int i = 0;
+
+            try
+            {
+                dbConnection.Open();
+                i = dbCommand.ExecuteNonQuery();
+                if (i == 0)
+                {
+                    errormsg = "Det gick inte att uppdatera måltiden";
+                    return (i);
+                }
+                else
+                {
+                    errormsg = "";
+                }
+
+            }
+            catch (Exception e)
+            {
+                errormsg = e.Message;
+                return 0;
+            }
+            finally
+            {
+                dbConnection.Close();
+            }
+
+
+            // Loopa igenom rättens allergier
+            int x = 0;
+            List<int> listOfSD = DiMo.SpecialDietInt;
+            int test = listOfSD[x];
+            while (x < listOfSD.Count)
+            {
+                // Lägg till nya allergier
+                sqlstring = "INSERT INTO [Tbl_DishHasSpecialDiet] ([HSD_Di_Id], [HSD_SD_Id]) VALUES((SELECT Di_Id FROM[Tbl_Dish] WHERE Di_Id = @id), @sd)";
+                dbCommand = new SqlCommand(sqlstring, dbConnection);
+                dbCommand.Parameters.Add("id", SqlDbType.NVarChar, 30).Value = DiMo.Id;
+                dbCommand.Parameters.Add("sd", SqlDbType.Int).Value = listOfSD[x];
+
+                try
+                {
+                    dbConnection.Open();
+                    i = dbCommand.ExecuteNonQuery();
+                    if (i == 1)
+                    {
+                        errormsg = "";
+                    }
+                    else
+                    {
+                        errormsg = "Det går inte att lägga till allergin till maträtten";
+                        return (i);
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    errormsg = e.Message;
+                    return 0;
+                }
+                finally
+                {
+                    dbConnection.Close();
+                }
+
+                x++;
+            }
+
+            return (i);
+
+        }
+
+
         public List<SpecialDietModel> GetSpecialDietList(out string errormsg)
         {
             //Skapa SqlConnection

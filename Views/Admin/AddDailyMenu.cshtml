@@ -53,10 +53,12 @@
 
 @if (@ViewBag.antal == 1)
 {
-    <p> @ViewBag.dish har lagts till </p>
+    <br/>
+    <p style="color:green;"> @ViewBag.dish har lagts till </p>
 }
 else if(@ViewBag.antal == 0)
 {
+    <br/>
    <p>@ViewBag.error</p> 
 }
 

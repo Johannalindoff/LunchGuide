@@ -51,6 +51,7 @@
             <th> Datum </th>
             <th> Rätt </th>
             <th> Anmärkning </th>
+            <th> </th>
         </tr>
     </thead>
     <tbody>
@@ -59,6 +60,11 @@
                 <td> @Html.DisplayFor(model =>  dishInfo.Date) </td>          
                 <td> @Html.DisplayFor(model =>  dishInfo.Dish) </td>
                 <td> @Html.DisplayFor(model =>  dishInfo.SpecialDietString) </td>
+
+                <td>
+                    @Html.ActionLink("Redigera", "Edit", new { id = dishInfo.Id }) |
+                    @Html.ActionLink("Ta bort", "Delete", new { id = dishInfo.Id })
+                </td>
             </tr>
         }
     </tbody>

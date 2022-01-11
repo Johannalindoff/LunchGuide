@@ -1,0 +1,77 @@
+﻿@model LunchGuide.Models.DishModel
+
+<div>
+    <h4>Redigera måltid</h4>
+    <hr />
+</div>
+
+@if (@ViewBag.antal == null)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                
+                    <input type="hidden" asp-for="Id" class="form-control" />
+                    <span asp-validation-for="Id" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Date" class="control-label">Datum</label>
+                    <input asp-for="Date" class="form-control"/>
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Dish" class="control-label">Namn på rätt</label>
+                    <input asp-for="Dish" class="form-control" />
+                    <span asp-validation-for="Dish" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    @foreach (var item in Model.AviableSD)
+                    {
+                        if ( Model.SpecialDietInt.Contains(@item.Id))
+                        {
+                            <input type="checkbox" id="@item.Id" name="CategoryIds" value="@item.Id" class="chkclasss" checked/>
+                            <label for="hej">@item.Type</label>
+                            <br/>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="@item.Id" name="CategoryIds" value="@item.Id" class="chkclasss"/>
+                            <label for="hej">@item.Type</label>
+                            <br/>
+                        }
+                    }
+                </div>
+
+                @if (@ViewBag.error != "")
+                {
+                    <p style="color:red;"> @ViewBag.error </p>
+                }
+
+                <div class="form-group">
+                    <input class="btn btn-success" type="submit" value="Uppdatera" class="btn-default"/>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+else if (@ViewBag.error != "") {
+    @ViewBag.error
+}
+else {
+    <div>
+        <p> Maträtten är uppdaterad </p>
+    </div>
+}
+
+
+<br/>
+
+<div>
+    <a asp-controller="Admin" asp-action="AdminOverview"><type ="button" class="btn btn-success">Tillbaka</button></a>
+</div>

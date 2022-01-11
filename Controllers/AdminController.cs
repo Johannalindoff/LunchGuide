@@ -177,5 +177,71 @@ namespace LunchGuide.Controllers
 
             return View(DiMo);
         }
+
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            DishModel DiMo = new DishModel();
+            DishMethods DiMe = new DishMethods();
+            DiMo = DiMe.GetDish(id, out string error);
+            DiMo.AviableSD = DiMe.GetSpecialDietList(out string error2);
+
+            return View(DiMo);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(DishModel DiMo, IFormCollection formAnswer)
+        {
+
+            // Samlar ihop enkätsvar
+            string items = formAnswer["CategoryIds"];
+            string[] checkedItemsString;
+            List<int> checkedItemsInt = new List<int>();
+
+            // De ibockade rutorna kommer som en sträng, dela upp den om omvandla till ints
+            if (items != null)
+            {
+                checkedItemsString = items.Split(new[]
+                {
+                    ","
+                }, StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < checkedItemsString.Length; i++)
+                {
+                    checkedItemsInt.Add(Convert.ToInt16(checkedItemsString[i]));
+                }
+            }
+
+            DiMo.SpecialDietInt = new List<int>();
+            DiMo.SpecialDietInt = checkedItemsInt;
+
+            DishMethods DiMe = new DishMethods();
+            int y = DiMe.EditDish(DiMo, out string error);
+            ViewBag.error = error;
+            ViewBag.antal = y;
+
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Delete(int id)
+        {
+            DishModel DiMo = new DishModel();
+            DishMethods DiMe = new DishMethods();
+            DiMo = DiMe.GetDish(id, out string error);
+
+            ViewBag.error = error;
+            return View(DiMo);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(DishModel DiMo)
+        {
+            DishMethods DiMe = new DishMethods();
+            int i = DiMe.DeleteDish(DiMo, out string error);
+            ViewBag.error = error;
+            ViewBag.antal = i;
+
+            return View();
+        }
     }
 }
