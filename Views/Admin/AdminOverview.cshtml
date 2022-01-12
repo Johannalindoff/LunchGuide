@@ -4,21 +4,24 @@
     ViewData["Title"] = "AdminOverview";
 }
 
-<p>
-    Du har loggat in som @ViewBag.name
-</p>
+<div style="text-align: right">
+    <p>
+        Du har loggat in som @ViewBag.name
+    </p>
+</div>
+
+<br/>
 
 
 <table  class="table table-hover">
     <thead >
         <tr>
-            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.Name) </th>
-            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.Address) </th>
-            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.Phone) </th>
-            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.Website) </th>
-            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.OpeningHours) </th>
-            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.Price) </th>
-            <th> @Html.DisplayNameFor(model => model.RestaurantInfo.University) </th>
+            <th> Restaurang </th>
+            <th> Adress </th>
+            <th> Telefonnummer </th>
+            <th> Hemsida </th>
+            <th> Lunchservering </th>
+            <th> Pris </th>
         </tr>
     </thead>
     <tbody>
@@ -29,12 +32,10 @@
             <td> @Html.DisplayFor(model => model.RestaurantInfo.Website) </td>
             <td> @Html.DisplayFor(model => model.RestaurantInfo.OpeningHours) </td>
             <td> @Html.DisplayFor(model => model.RestaurantInfo.Price) </td>
-            <td> @Html.DisplayFor(model => model.RestaurantInfo.University) </td>
         </tr>
     </tbody>
 </table>
 
-<br/>
 <br/>
 
 <h3>Din lunchmeny</h3>
@@ -42,8 +43,10 @@
 <br/>
 
 <div>
-    <a asp-controller="Admin" asp-action="AddDailyMenu">Lägg till rätter</a>
+    <a asp-controller="Admin" asp-action="AddDailyMenu"><type ="button" class="btn btn-success">Lägg till rätter</button></a>
 </div>
+
+<br/>
 
 <table  class="table table-hover">
     <thead >

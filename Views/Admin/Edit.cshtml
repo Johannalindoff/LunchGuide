@@ -1,77 +1,106 @@
 ﻿@model LunchGuide.Models.DishModel
 
-<div>
-    <h4>Redigera måltid</h4>
-    <hr />
-</div>
+<style>
+    .body {
+        margin: 0 auto;
+    }
 
-@if (@ViewBag.antal == null)
-{
-    <div class="row">
-        <div class="col-md-4">
-            <form asp-action="Edit" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    .grid-container{
+        display: grid;
+        grid-template-columns: 20% 60% 20%;
+        grid-template-rows: 500px;
+    }
 
-                <div class="form-group">
+    .edit-dish {
+        grid-column:  2/3;
+        grid-row: 1/2;
+        justify-self: center;
+        align-self: center;
+    }
+</style>
+
+
+
+<div class="grid-container">
+    <div class="edit-dish">
+
+
+        @if (@ViewBag.antal == null)
+        {
+            <div>
+                <h4>Redigera måltid</h4>
+                <br />
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <form asp-action="Edit" method="post" style="margin: 0% auto; width:400px;">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
                 
-                    <input type="hidden" asp-for="Id" class="form-control" />
-                    <span asp-validation-for="Id" class="text-danger"></span>
-                </div>
+                            <input type="hidden" asp-for="Id" class="form-control" />
+                            <span asp-validation-for="Id" class="text-danger"></span>
+                        </div>
 
-                <div class="form-group">
-                    <label asp-for="Date" class="control-label">Datum</label>
-                    <input asp-for="Date" class="form-control"/>
-                    <span asp-validation-for="Date" class="text-danger"></span>
-                </div>
+                        <div class="form-group">
+                            <label asp-for="Date" class="control-label">Datum</label>
+                            <input asp-for="Date" class="form-control"/>
+                            <span asp-validation-for="Date" class="text-danger"></span>
+                        </div>
 
-                <div class="form-group">
-                    <label asp-for="Dish" class="control-label">Namn på rätt</label>
-                    <input asp-for="Dish" class="form-control" />
-                    <span asp-validation-for="Dish" class="text-danger"></span>
-                </div>
+                        <div class="form-group">
+                            <label asp-for="Dish" class="control-label">Namn på rätt</label>
+                            <input asp-for="Dish" class="form-control" />
+                            <span asp-validation-for="Dish" class="text-danger"></span>
+                        </div>
 
-                <div class="form-group">
-                    @foreach (var item in Model.AviableSD)
-                    {
-                        if ( Model.SpecialDietInt.Contains(@item.Id))
+                        <br/>
+
+                        <div class="form-group">
+                            @foreach (var item in Model.AviableSD)
+                            {
+                                if ( Model.SpecialDietInt.Contains(@item.Id))
+                                {
+                                    <input type="checkbox" id="@item.Id" name="CategoryIds" value="@item.Id" class="chkclasss" checked/>
+                                    <label for="hej">@item.Type</label>
+                                    <br/>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="@item.Id" name="CategoryIds" value="@item.Id" class="chkclasss"/>
+                                    <label for="hej">@item.Type</label>
+                                    <br/>
+                                }
+                            }
+                        </div>
+
+                        @if (@ViewBag.error != "")
                         {
-                            <input type="checkbox" id="@item.Id" name="CategoryIds" value="@item.Id" class="chkclasss" checked/>
-                            <label for="hej">@item.Type</label>
-                            <br/>
+                            <p style="color:red;"> @ViewBag.error </p>
                         }
-                        else
-                        {
-                            <input type="checkbox" id="@item.Id" name="CategoryIds" value="@item.Id" class="chkclasss"/>
-                            <label for="hej">@item.Type</label>
-                            <br/>
-                        }
-                    }
-                </div>
 
-                @if (@ViewBag.error != "")
-                {
-                    <p style="color:red;"> @ViewBag.error </p>
-                }
-
-                <div class="form-group">
-                    <input class="btn btn-success" type="submit" value="Uppdatera" class="btn-default"/>
+                        <div class="form-group">
+                            <input class="btn btn-success" type="submit" value="Uppdatera" class="btn-default"/>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
+        }
+        else if (@ViewBag.error != "") {
+            @ViewBag.error
+        }
+        else {
+            <div style="text-align: center;">
+                <p> Maträtten är uppdaterad </p>
+            </div>
+        }
+        <br/>
+
+        <div>
+            <a asp-controller="Admin" asp-action="AdminOverview">Tillbaka till restaurangöverblick</a>
         </div>
     </div>
-}
-else if (@ViewBag.error != "") {
-    @ViewBag.error
-}
-else {
-    <div>
-        <p> Maträtten är uppdaterad </p>
-    </div>
-}
-
-
-<br/>
-
-<div>
-    <a asp-controller="Admin" asp-action="AdminOverview"><type ="button" class="btn btn-success">Tillbaka</button></a>
 </div>
+
+

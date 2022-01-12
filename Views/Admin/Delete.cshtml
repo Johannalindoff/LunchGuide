@@ -1,43 +1,94 @@
 ﻿@model LunchGuide.Models.DishModel
 
+<style>
+    .body {
+        margin: 0 auto;
+    }
 
-@if ( @ViewBag.antal == null) {
-    <div>
-        <p>Är du säker på att du vill radera @Html.DisplayFor(model => model.Dish) från menyn?</p>
-        <br />
-    </div>
+    .grid-container{
+        display: grid;
+        margin-top: 200px;
+        grid-template-columns: 20% 60% 20%;
+        grid-template-rows: 20px 80px 50px;
+        justify-items: center;
+        align-items: center;
+        text-align: center;
 
-    <div class="row">
-        <div class="col-md-4">
-            <form asp-action="Delete" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    }
 
-                <div class="form-group">
+    .delete-text {
+        grid-column: 2/3;
+        grid-row: 1/2;
+    }
 
-                    <input type="hidden" asp-for="Id" class="form-control" />
-                    <span asp-validation-for="Id" class="text-danger"></span>
-                </div>
+    .delete-button {
+        grid-column: 2/3;
+        grid-row: 2/3;
+        display:grid;
+        grid-template-columns: 20% 20% 20% 20% 20%;
+    }
 
-                <div class="form-group">
-                    <input class="btn btn-danger" type="submit" value="Radera" class="btn-default" />
-                </div>
-            </form>
+    .actual-button {
+        grid-column: 3/4;
+    }
+
+    .back-text {
+        grid-column: 2/3;
+        grid-row: 3/4;
+    }
+</style>
+
+<div class="grid-container">
+    
+    @if ( @ViewBag.antal == null) {
+        
+        <div class="delete-text">
+            <p>Är du säker på att du vill radera @Html.DisplayFor(model => model.Dish) från menyn?</p>
+            <br />
         </div>
+
+        <div class="delete-button">
+            <div class="row">
+                <div class="col-md-4">
+                    <form asp-action="Delete" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+
+                            <input type="hidden" asp-for="Id" class="form-control" />
+                            <span asp-validation-for="Id" class="text-danger"></span>
+                        </div>
+
+                        
+                        <div class="actual-button">
+                            <div class="form-group">
+                                <input class="btn btn-danger" type="submit" value="Radera" class="btn-default" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+    }
+    else if (@ViewBag.error != "") {
+        @ViewBag.error
+    }
+    else {
+        <div class="delete-text">
+            <p> Maträtten är borttagen </p>
+        </div>
+    }
+
+    <br/>
+
+    <div class="back-text">
+        <a asp-controller="Admin" asp-action="AdminOverview">Tillbaka till restaurangöverblick</a>
     </div>
-}
-else if (@ViewBag.error != "") {
-    @ViewBag.error
-}
-else {
-    <div>
-        <p> Maträtten är borttagen </p>
-    </div>
-}
 
-
-<br/>
-
-<div>
-    <a asp-controller="Admin" asp-action="AdminOverview"><type ="button" class="btn btn-success">Tillbaka</button></a>
 </div>
+
+
 
